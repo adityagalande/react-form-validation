@@ -1,29 +1,30 @@
-import React, { useState } from "react";
+import useInput from "../hooks/use-input";
 
 const SimpleInput = (props) => {
-  const [userInput, setUserInput] = useState("");
-  const [isValid, setIsValid] = useState(false);
-  const [enteredNameTouched, setEnteredNameTouch] = useState(false);
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangedHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput,
+  } = useInput((value) => value.trim() !== "");
 
-  const userInputHandler = (event) => {
-    setUserInput(event.target.value);
-    // console.log(event.target.value);
-  };
+  let formIsValid = false;
+  if (enteredNameIsValid) {
+    formIsValid = true;
+  }
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
-    setEnteredNameTouch(true);
-    if (userInput.trim() === "") {
-      setIsValid(false);
+    if (!enteredNameIsValid) {
       return;
     }
-    setIsValid(true);
-    console.log(userInput);
-    setUserInput("");
+    console.log(enteredName);
+    resetNameInput();
   };
 
-  const nameInputIsInvalid = !isValid && enteredNameTouched;
-  const nameInputClass = nameInputIsInvalid
+  const nameInputClass = nameInputHasError
     ? "form-control invalid"
     : "form-control";
 
@@ -34,13 +35,14 @@ const SimpleInput = (props) => {
         <input
           type="text"
           id="name"
-          onChange={userInputHandler}
-          value={userInput}
+          onChange={nameChangedHandler}
+          onBlur={nameBlurHandler}
+          value={enteredName}
         />
-        {nameInputIsInvalid && <p className="error-text">Invalid input</p>}
+        {nameInputHasError && <p className="error-text">Invalid input</p>}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
