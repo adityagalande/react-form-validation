@@ -1,5 +1,6 @@
 import "./App.css";
 import BasicForm from "./components/BasicForm";
+import LoginForm from "./components/LoginForm";
 import SimpleInput from "./components/SimpleInput";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <div className="app">
       <SimpleInput />
       <BasicForm />
+      <LoginForm />
     </div>
   );
 }
